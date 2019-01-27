@@ -20,6 +20,29 @@ class Data extends React.Component{
     this.build();
   }
 
+  //Write to Firebase DB:
+  //will write to each individuals ID
+  //not sure how to navigate into individual stock in the tree yet
+  writeUserDataStock(ID, stock, price, date, stockAmount) {
+    firebase.database().ref('nameOfDB/' + ID + '/').set({
+      date,
+      price,
+      stockAmount
+    }).then((data)=> {
+      //success callback
+      console.log('data', data)
+    }).catch((error)=>{
+      //error callback
+      console.log('error', error)
+    })
+  }
+
+  readStockInfo(ID, stock) {
+    firebase.database().ref('nameOfDB/' + ID + '/' + stock + '/').once('value', function(snapshot) {
+      console.log(snapshot.val())
+    });
+  }
+
   build() {
     database.ref("Users/aeyS4Uyw8fOh5CtjZYaAKIy7a133/Stocks").on('value', (snapshot) => {
       let list = [];
