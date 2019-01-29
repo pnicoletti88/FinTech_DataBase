@@ -109,16 +109,17 @@ class App extends Component {
   //and send as inputs to the fn writeUserDataStock
   //Think there is a problem with my handlers though because it's not writing to the DB
   handleSubmit = (event) => {
-    //writeUserDataStock(ID, stock, price, date, shares)
-    this.writeUserDataStock(this.state.ID, this.state.stock, this.state.price, this.state.date, this.state.shares);
+    //This works now! changed the button to a dumb button form and used onClick instead of submit
+    //this will also overwrite data if it already exists!
     console.log(this.state.ID);
+    this.writeUserDataStock(this.state.ID, this.state.stock, this.state.price, this.state.date, this.state.shares);
     console.log("Firebase DB updated");
   }
 
   render() {
     return (
       //currently calling onChange, should probably change to onSubmit
-      <form>
+      <form >
         <label>ID</label>
         <input type="text" name="ID" onChange={this.handleChange}/>
 
@@ -134,7 +135,7 @@ class App extends Component {
         <label>shares</label>
         <input type="number" name="shares" onChange={this.handleChange}/>
 
-        <button type="submit" onSubmit={this.handleSubmit}>Submit</button>
+        <button type="button" onClick={this.handleSubmit}>Submit</button>
       </form>
     );
   }
