@@ -65,32 +65,23 @@ class Data extends React.Component{
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      ID: '',
-      stock: '',
-      price: 0,
-      date: '',
-      shares: 0
-    };
     this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+
+  state = {
+    ID: '',
+    stock : '',
+    price : 0,
+    date : '',
+    shares : 0
   }
 
   //Write to Firebase DB:
   //will write to each individuals ID
   //not sure how to navigate into individual stock in the tree yet
   writeUserDataStock(ID, stock, price, date, shares) {
-    ///users/ifLn2rp6VynduyBNe61b/stocks/GOOG
-    // firebase.database().ref('users/' + ID + '/stocks/' + stock + '/').set({
-    //   date,
-    //   price,
-    //   shares
-    // }).then((data)=> {
-    //   //success callback
-    //   console.log('data', data)
-    // }).catch((error)=>{
-    //   //error callback
-    //   console.log('error', error)
-    // })
 
     var docData = {
       price,
@@ -98,7 +89,7 @@ class App extends Component {
       shares
     };
 
-    db.collection("users").doc(ID).collection(stock).doc(stock).set(docData).then(function() {
+    db.collection("users").doc(ID).collection("stocks").doc(stock).set(docData).then(function() {
       console.log("Document successfully written to");
     });
   }
@@ -114,6 +105,9 @@ class App extends Component {
     console.log(event.target.value);
   }
 
+  //When submit button is pressed it will take the data (which has been changed already by the handleChange handler)
+  //and send as inputs to the fn writeUserDataStock
+  //Think there is a problem with my handlers though because it's not writing to the DB
   handleSubmit = (event) => {
     //writeUserDataStock(ID, stock, price, date, shares)
     this.writeUserDataStock(this.state.ID, this.state.stock, this.state.price, this.state.date, this.state.shares);
@@ -124,7 +118,7 @@ class App extends Component {
   render() {
     return (
       //currently calling onChange, should probably change to onSubmit
-      <form onSubmit={this.handleSubmit.bind(this)}>
+      <form>
         <label>ID</label>
         <input type="text" name="ID" onChange={this.handleChange}/>
 
@@ -140,7 +134,7 @@ class App extends Component {
         <label>shares</label>
         <input type="number" name="shares" onChange={this.handleChange}/>
 
-        <button type="submit">Submit</button>
+        <button type="submit" onSubmit={this.handleSubmit}>Submit</button>
       </form>
     );
   }
