@@ -23,11 +23,12 @@ class Data extends React.Component{
   //Write to Firebase DB:
   //will write to each individuals ID
   //not sure how to navigate into individual stock in the tree yet
-  writeUserDataStock(ID, stock, price, date, stockAmount) {
-    firebase.database().ref('nameOfDB/' + ID + '/').set({
+  writeUserDataStock(ID, stock, price, date, shares) {
+    ///users/ifLn2rp6VynduyBNe61b/stocks/GOOG
+    firebase.database().ref('users/' + ID + '/stocks/' + stock + '/').set({
       date,
       price,
-      stockAmount
+      shares
     }).then((data)=> {
       //success callback
       console.log('data', data)
@@ -76,9 +77,7 @@ class Data extends React.Component{
     }
     return (
         <div>
-          <table>
-            <ul>{x}</ul>
-          </table>
+          
         </div>
 
   );
@@ -88,13 +87,51 @@ class Data extends React.Component{
 
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      ID: '',
+      stock: '',
+      price: 0,
+      date: '',
+      shares: 0
+    };
+    this.handleChange = this.handleChange.bind(this);
+  }
+
+  handleChange(event) {
+    this.setState({ [event.target.name]: event.target.value });
+    console.log(event.target.value);
+  }
+
+  handleSubmit(event) {
+    //writeUserDataStock(ID, stock, price, date, shares)
+    // writeUserDataStock(this.state.ID, this.state.stock, this.state.price, this.state.date, this.state.shares);
+    console.log(this.state.ID);
+    console.log("Firebase DB updated");
+  }
+
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <Data />
-        </header>
-      </div>
+      //currently calling onChange, should probably change to onSubmit
+      <form onSubmit={this.handleSubmit.bind(this)}>
+        <label>ID</label>
+        <input type="text" name="ID" onChange={this.handleChange}/>
+
+        <label>stock</label>
+        <input type="text" name="stock" onChange={this.handleChange}/>
+
+        <label>price</label>
+        <input type="number" name="price" onChange={this.handleChange}/>
+
+        <label>date</label>
+        <input type="number" name="date" onChange={this.handleChange}/>
+
+        <label>shares</label>
+        <input type="number" name="shares" onChange={this.handleChange}/>
+
+        <button type="submit">Submit</button>
+      </form>
     );
   }
 }
