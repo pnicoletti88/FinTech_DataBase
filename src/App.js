@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
-import firebase, { auth, provider,database } from './firebase.js';
+import firebase, { auth, provider, database, db } from './firebase.js';
 
 
 class TableRow extends Component{
@@ -18,30 +18,6 @@ class Data extends React.Component{
       stocks: ""
     };
     this.build();
-  }
-
-  //Write to Firebase DB:
-  //will write to each individuals ID
-  //not sure how to navigate into individual stock in the tree yet
-  writeUserDataStock(ID, stock, price, date, shares) {
-    ///users/ifLn2rp6VynduyBNe61b/stocks/GOOG
-    firebase.database().ref('users/' + ID + '/stocks/' + stock + '/').set({
-      date,
-      price,
-      shares
-    }).then((data)=> {
-      //success callback
-      console.log('data', data)
-    }).catch((error)=>{
-      //error callback
-      console.log('error', error)
-    })
-  }
-
-  readStockInfo(ID, stock) {
-    firebase.database().ref('nameOfDB/' + ID + '/' + stock + '/').once('value', function(snapshot) {
-      console.log(snapshot.val())
-    });
   }
 
   build() {
@@ -99,14 +75,48 @@ class App extends Component {
     this.handleChange = this.handleChange.bind(this);
   }
 
+  //Write to Firebase DB:
+  //will write to each individuals ID
+  //not sure how to navigate into individual stock in the tree yet
+  writeUserDataStock(ID, stock, price, date, shares) {
+    ///users/ifLn2rp6VynduyBNe61b/stocks/GOOG
+    // firebase.database().ref('users/' + ID + '/stocks/' + stock + '/').set({
+    //   date,
+    //   price,
+    //   shares
+    // }).then((data)=> {
+    //   //success callback
+    //   console.log('data', data)
+    // }).catch((error)=>{
+    //   //error callback
+    //   console.log('error', error)
+    // })
+
+    var docData = {
+      price,
+      date,
+      shares
+    };
+
+    db.collection("users").doc(ID).collection(stock).doc(stock).set(docData).then(function() {
+      console.log("Document successfully written to");
+    });
+  }
+
+  readStockInfo(ID, stock) {
+    firebase.database().ref('nameOfDB/' + ID + '/' + stock + '/').once('value', function(snapshot) {
+      console.log(snapshot.val())
+    });
+  }
+
   handleChange(event) {
     this.setState({ [event.target.name]: event.target.value });
     console.log(event.target.value);
   }
 
-  handleSubmit(event) {
+  handleSubmit = (event) => {
     //writeUserDataStock(ID, stock, price, date, shares)
-    // writeUserDataStock(this.state.ID, this.state.stock, this.state.price, this.state.date, this.state.shares);
+    this.writeUserDataStock(this.state.ID, this.state.stock, this.state.price, this.state.date, this.state.shares);
     console.log(this.state.ID);
     console.log("Firebase DB updated");
   }

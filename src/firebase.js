@@ -15,17 +15,26 @@ import firebase from 'firebase'
 
 //this is for my firebase login:
 
-const config = {
+// const config = {
+// 	apiKey: "AIzaSyAYTJYQ5DVL3pWZrvNl4t7vduY6e0WHGrc",
+//     authDomain: "fintechdb-53af2.firebaseapp.com",
+//     databaseURL: "https://fintechdb-53af2.firebaseio.com",
+//     projectId: "fintechdb-53af2",
+//     storageBucket: "fintechdb-53af2.appspot.com",
+//     messagingSenderId: "44938465969"
+// }
+
+// firebase.initializeApp(config);
+
+firebase.initializeApp({
 	apiKey: "AIzaSyAYTJYQ5DVL3pWZrvNl4t7vduY6e0WHGrc",
     authDomain: "fintechdb-53af2.firebaseapp.com",
-    databaseURL: "https://fintechdb-53af2.firebaseio.com",
-    projectId: "fintechdb-53af2",
-    storageBucket: "fintechdb-53af2.appspot.com",
-    messagingSenderId: "44938465969"
-}
+	projectId: "fintechdb-53af2",
+	databaseURL: "https://fintechdb-53af2.firebaseio.com"
+});
 
-firebase.initializeApp(config);
 export const provider = new firebase.auth.GoogleAuthProvider();
 export const auth = firebase.auth();
 export const database = firebase.database();
+export var db = firebase.firestore();
 export default firebase;
