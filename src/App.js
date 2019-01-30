@@ -95,14 +95,23 @@ class App extends Component {
   }
 
   readStockInfo(ID, stock) {
-    firebase.database().ref('nameOfDB/' + ID + '/' + stock + '/').once('value', function(snapshot) {
-      console.log(snapshot.val())
+    var docRef = db.collection("users").doc(ID).collection("stocks").doc(stock);
+
+    docRef.get().then(function(doc) {
+      if (doc.exists) {
+        console.log("Document data: ", doc.data());
+      }
+      else {
+        //doc.data() will be undefined here
+        console.log("No such stock information!");
+      }
+    }).catch(function(error) {
+      console.log("Error retrieving document: ", error);
     });
   }
 
   handleChange(event) {
     this.setState({ [event.target.name]: event.target.value });
-    console.log(event.target.value);
   }
 
   //When submit button is pressed it will take the data (which has been changed already by the handleChange handler)
@@ -111,9 +120,13 @@ class App extends Component {
   handleSubmit = (event) => {
     //This works now! changed the button to a dumb button form and used onClick instead of submit
     //this will also overwrite data if it already exists!
-    console.log(this.state.ID);
     this.writeUserDataStock(this.state.ID, this.state.stock, this.state.price, this.state.date, this.state.shares);
     console.log("Firebase DB updated");
+  }
+
+  handleRead = (event) => {
+    console.log("Read called successfully!");
+    this.readStockInfo(this.state.ID, this.state.stock);
   }
 
   render() {
@@ -136,6 +149,8 @@ class App extends Component {
         <input type="number" name="shares" onChange={this.handleChange}/>
 
         <button type="button" onClick={this.handleSubmit}>Submit</button>
+
+        <button type="button" onClick={this.handleRead}>Get</button>
       </form>
     );
   }
