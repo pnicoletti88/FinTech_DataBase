@@ -118,6 +118,12 @@ class App extends Component {
   //and send as inputs to the fn writeUserDataStock
   //Think there is a problem with my handlers though because it's not writing to the DB
   handleSubmit = (event) => {
+    /*
+    FYI you can use submit and have the first line of code in you handle submit function be:
+      event.preventDefault();
+    It would be able to handle the same functionality here
+     */
+
     //This works now! changed the button to a dumb button form and used onClick instead of submit
     //this will also overwrite data if it already exists!
     this.writeUserDataStock(this.state.ID, this.state.stock, this.state.price, this.state.date, this.state.shares);
